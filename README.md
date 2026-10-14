@@ -52,8 +52,10 @@ CLI 通过 streamable HTTP 直连 `https://mcp.mcd.cn` 调用 `list-nutrition-fo
 ├── MCP_INTEGRATION.md         # MCP 工具调用说明
 ├── mcp-config.example.json    # 脱敏 MCP 配置示例（仅环境变量占位符）
 ├── requirements.txt
-├── skill/
-│   └── SKILL.md               # WorkBuddy 技能定义
+├── skill/                     # WorkBuddy 技能（在 WorkBuddy 中实际开发生成，已实测）
+│   ├── SKILL.md               # 技能定义：四步工作流+省钱联动+下单确认+红线
+│   ├── scripts/combo_search.py # 确定性组合搜索（stdin 喂餐品JSON，输出Top-N候选）
+│   └── references/mcp_tools.md # MCP工具职责/调用顺序/数据约定
 └── src/
     ├── mcd_mcp_client.py      # 麦当劳 MCP streamable HTTP 客户端
     ├── nutrition_engine.py    # 组合搭配与营养计算引擎
