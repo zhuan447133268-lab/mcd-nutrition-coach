@@ -6,15 +6,15 @@
 from dataclasses import dataclass, field
 from itertools import combinations
 
-# list-nutrition-foods 返回字段 → 引擎内部字段（以官方工具实际返回为准）
+# list-nutrition-foods 返回字段（官方实测）：productName, energyKj, energyKcal,
+# protein, fat, carbohydrate, sodium, calcium；无价格字段（价格需 query-meals 补充）
 FIELD_MAP = {
-    "name": "name",
-    "energy": "kcal",        # 能量(kcal)
-    "protein": "protein",    # 蛋白质(g)
-    "fat": "fat",            # 脂肪(g)
-    "carbohydrate": "carbs", # 碳水化合物(g)
-    "sodium": "sodium",      # 钠(mg)
-    "price": "price",        # 价格(元)，营养接口未返回时由 query-meals 补充
+    "productName": "name",
+    "energyKcal": "kcal",     # 能量(kcal)
+    "protein": "protein",     # 蛋白质(g)
+    "fat": "fat",             # 脂肪(g)
+    "carbohydrate": "carbs",  # 碳水化合物(g)
+    "sodium": "sodium",       # 钠(mg)
 }
 
 
@@ -49,12 +49,12 @@ class Combo:
 def normalize(raw: dict) -> Item | None:
     """把一条原始数据归一化为 Item；没有可识别营养字段的条目直接丢弃。"""
     try:
-        vals = {v: float(raw.get(k) or 0) for k, v in FIELD_MAP.items() if k != "name"}
+        vals = {v: float(raw.get(k) or 0) for k, v in FIELD_MAP.items() if v != "name"}
     except (TypeError, ValueError):
         return None
     if vals["kcal"] <= 0:
         return None
-    return Item(name=str(raw.get(FIELD_MAP["name"], "未命名")), **vals)
+    return Item(name=str(raw.get("productName", "未命名")), **vals)
 
 
 def _score(c: Combo, goal: Goal) -> float:
